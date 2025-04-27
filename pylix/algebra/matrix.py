@@ -1,5 +1,5 @@
 import math
-from typing import override, Optional, Self, Union, List
+from typing import override, Optional, Self, Union, List, Iterable
 from enum import Enum
 
 import numpy as np
@@ -88,96 +88,17 @@ class Matrix:
         _rows (int): The number of rows in the matrix.
         _columns (int): The number of columns in the matrix.
 
-    Methods:
-        __init__(data: list, columns: int, rows: int):
-            Initializes the matrix with the given data, number of rows, and columns.
-
-        get_rows():
-            Returns the number of rows in the matrix.
-
-        get_columns():
-            Returns the number of columns in the matrix.
-
-        get_dimension():
-            Returns a tuple representing the (columns, rows) of the matrix.
-
-        get_component(column: int, row: int):
-            Returns the element at the specified column and row.
-
-        set_component(column: int, row: int, value: int | float | np.float64):
-            Sets the value of the element at the specified column and row.
-
-        get_components():
-            Returns a copy of the matrix data.
-
-        set_components(data: list | np.ndarray):
-            Sets the matrix data with the provided list or NumPy array.
-
-        get_invers():
-            Returns an invers matrix
-
-        copy():
-            Returns a copy of the matrix.
-
-        __eq__(other):
-            Checks if the matrix is equal to another matrix or NumPy array.
-
-        __add__(other):
-            Adds another matrix to the current matrix.
-
-        __radd__(other):
-            Right-hand addition for matrices.
-
-        __iadd__(other):
-            In-place addition for matrices.
-
-        __sub__(other):
-            Subtracts another matrix from the current matrix.
-
-        __rsub__(other):
-            Right-hand subtraction for matrices.
-
-        __isub__(other):
-            In-place subtraction for matrices.
-
-        __mul__(other):
-            Multiplies the current matrix with another matrix or scalar value.
-
-        __rmul__(other):
-            Right-hand multiplication for matrices or scalars.
-
-        __imul__(other):
-            In-place multiplication for matrices or scalars.
-
-        __truediv__(other):
-            Divides the matrix by a scalar value.
-
-        __itruediv__(other):
-            In-place division for matrices.
-
-        __pow__(power, modulo=None):
-            Raises the matrix to the power of a given integer.
-
-        __ipow__(power):
-            In-place exponentiation for matrices.
-
-        __str__():
-            Returns a string representation of the matrix.
-
-        __repr__():
-            Returns a string representation of the matrix.
-
-        __iter__():
-            The class is iterable.
     """
-    def __init__(self, data: Lists = None, rows: Int = 2, columns: Int = 2, default_value: Number = 0):
+    def __init__(self, data: Iterable[Iterable[Number]] = None,
+                 rows: Int = 2, columns: Int = 2,
+                 default_value: Number = 0):
         """
         Creates a 2D Matrix.
 
         Crée une matrice 2D.
 
         Args:
-            data (list): A 2D array which holds the components
+            data (Iterable[Iterable[Number]]): A 2D array which holds the components
             columns (int): the number of columns (default 2; If none are given, columns = len(data[0]))
             rows (int): the number of rows (default 2; If none are given, rows = len(data))
             default_value (Number): If no data is given, this value will be used as placeholder. default = 0
@@ -188,19 +109,18 @@ class Matrix:
             default_data = True
         assertion.assert_types(rows, TypesTuple.INT.value, ArgumentError, code=ArgumentCodes.NOT_INT)
         assertion.assert_types(columns, TypesTuple.INT.value, ArgumentError, code=ArgumentCodes.NOT_INT)
-        assertion.assert_types(data, TypesTuple.LISTS.value, ArgumentError, code=ArgumentCodes.NOT_LISTS)
+        assertion.assert_type(data, Iterable, ArgumentError, code=ArgumentCodes.NOT_ITERABLE)
         assertion.assert_is_positiv(rows, ArgumentError, code=ArgumentCodes.NOT_POSITIV)
         assertion.assert_is_positiv(columns, ArgumentError, code=ArgumentCodes.NOT_POSITIV)
         assertion.assert_not_zero(columns, ArgumentError, code=ArgumentCodes.ZERO)
         assertion.assert_not_zero(rows, ArgumentError, code=ArgumentCodes.ZERO)
         if len(data) > 0:
             assertion.assert_layer_list(data, assertion.assert_types,
-                                        {"types": (*TypesTuple.NUMBER.value, *TypesTuple.LISTS.value)}, ArgumentError,
-                                        code=ArgumentCodes.LIST_LAYER_NOT_NUMBER_LISTS)
+                                        {"types": (*TypesTuple.NUMBER.value, Iterable)}, ArgumentError,
+                                        code=ArgumentCodes.ITERABLE_LAYER_NOT_NUMBER_LISTS)
         if len(data) > 0 and isinstance(data[0], TypesTuple.LISTS.value):
             for d in data:
-                assertion.assert_types(d, TypesTuple.LISTS.value, ArgumentError,
-                                       code=ArgumentCodes.NOT_LISTS)
+                assertion.assert_type(d, Iterable, ArgumentError, code=ArgumentCodes.NOT_ITERABLE)
                 assertion.assert_layer_list(d, assertion.assert_types,
                                             {"types": TypesTuple.NUMBER.value}, ArgumentError,
                                             code=ArgumentCodes.LIST_LAYER_NOT_NUMBER)
@@ -251,6 +171,7 @@ class Matrix:
         row = int(row)
         return float(self._data[row][column])
 
+    @deprecated("Use matrix[i][j] = value instead.")
     def set_component(self, row: Int, column: Int, value: Number) -> None:
         assertion.assert_types(column, TypesTuple.INT.value, ArgumentError, code=ArgumentCodes.NOT_INT)
         assertion.assert_types(row, TypesTuple.INT.value, ArgumentError, code=ArgumentCodes.NOT_INT)
@@ -263,17 +184,15 @@ class Matrix:
     def get_components(self) -> np.ndarray:
         return self._data.copy()
 
-    def set_components(self, data: Lists) -> None:
-        assertion.assert_types(data, TypesTuple.LISTS.value, ArgumentError,
-                               code=ArgumentCodes.NOT_LISTS)
+    def set_components(self, data: Iterable[Iterable[Number]]) -> None:
+        assertion.assert_type(data, Iterable, ArgumentError, code=ArgumentCodes.NOT_ITERABLE)
         if len(data) > 0:
             assertion.assert_layer_list(data, assertion.assert_types,
-                                        {"types": (*TypesTuple.NUMBER.value, *TypesTuple.LISTS.value)}, ArgumentError,
-                                        code=ArgumentCodes.LIST_LAYER_NOT_NUMBER_LISTS)
+                                        {"types": (*TypesTuple.NUMBER.value, Iterable)}, ArgumentError,
+                                        code=ArgumentCodes.ITERABLE_LAYER_NOT_NUMBER_LISTS)
         if len(data) > 0 and isinstance(data[0], TypesTuple.LISTS.value):
             for d in data:
-                assertion.assert_types(d, TypesTuple.LISTS.value, ArgumentError,
-                                       code=ArgumentCodes.NOT_LISTS)
+                assertion.assert_type(d, Iterable, ArgumentError, code=ArgumentCodes.NOT_ITERABLE)
                 assertion.assert_layer_list(d, assertion.assert_types,
                                             {"types": TypesTuple.NUMBER.value}, ArgumentError,
                                             code=ArgumentCodes.LIST_LAYER_NOT_NUMBER)
@@ -741,3 +660,6 @@ class Matrix:
         else:
             assertion.assert_range(len(self._data) + item, 0, len(self._data) - 1, ArgumentError, code=ArgumentCodes.OUT_OF_RANGE)
             return self._data[len(self._data) + item]
+
+    def __len__(self):
+        return self.get_rows()

@@ -142,3 +142,7 @@ def test_sample():
     v: Vector = Vector([1, 2, 3, 5])
     b: Vector = Vector.sample(v, 3)
     assert b.get_dimension() == 3
+
+def test___len__():
+    v: Vector = Vector([1, 2, 3, 5])
+    assert len(v) == 4

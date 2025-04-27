@@ -134,7 +134,7 @@ class Vector(Matrix):
                                code=ArgumentCodes.OUT_OF_RANGE)
         return float(self._data[index][0])
 
-    @override
+    @deprecated("Use vector[i] = value instead.")
     def set_component(self, index: Int, value: Number) -> None:
         super().set_component(index, 1, value)
 
@@ -391,3 +391,6 @@ class Vector(Matrix):
         else:
             assertion.assert_range(len(self._data) + index, 0, len(self._data) - 1, ArgumentError, code=ArgumentCodes.OUT_OF_RANGE)
             self._data[len(self._data) + index] = [value]
+
+    def __len__(self) -> int:
+        return self.get_dimension()

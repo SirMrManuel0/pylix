@@ -1,3 +1,5 @@
+from typing import Iterable
+
 from pylix.errors.enums import ArgumentCodes, MathCodes, BaseCodes, TypesTuple
 
 
@@ -51,7 +53,9 @@ ARGUMENT_ERROR_MESSAGES: dict = {
     ArgumentCodes.TOO_SMALL:
         f"The given argument was smaller than a limit value.",
     ArgumentCodes.NOT_ITERABLE:
-        f"The given value is not an iterable."
+        f"The given value is not an iterable.",
+    ArgumentCodes.ITERABLE_LAYER_NOT_NUMBER_LISTS:
+        f"The given value was neither a number nor an iterable as defined for: {(*TypesTuple.NUMBER.value, Iterable)}.",
 }
 
 MATH_ERROR_MESSAGES: dict = {

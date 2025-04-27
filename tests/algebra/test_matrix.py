@@ -293,3 +293,8 @@ def test_min():
 def test_sum():
     m: Matrix = Matrix([[1, 2], [3, 4]])
     assert m.sum() == 10
+
+def test___len__():
+    m: Matrix = Matrix([[1, 2, 3], [4, 5, 6]])
+    assert len(m) == 2
+    assert len(m[0]) == 3
