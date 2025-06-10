@@ -48,7 +48,7 @@ def TODO(arg=None):
     if callable(arg):  # used as @TODO
         @functools.wraps(arg)
         def wrapper(*args, **kwargs):
-            warnings.warn(f"{arg.__name__} - TODO: implementation pending", stacklevel=2)
+            warnings.warn(f"{arg.__name__} - TODO: implementation pending.", stacklevel=2)
             return arg(*args, **kwargs)
         return wrapper
 
@@ -56,7 +56,35 @@ def TODO(arg=None):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             message = arg or "implementation pending"
-            warnings.warn(f"{func.__name__} - TODO: {message}", stacklevel=2)
+            warnings.warn(f"{func.__name__} - TODO: {message}.", stacklevel=2)
+            return func(*args, **kwargs)
+        return wrapper
+
+    return decorator
+
+def to_test(arg=None):
+    """
+    This decorator gives a warning if the testing for the function has not yet been implemented.
+    The function still executes.
+
+    Ce décorateur émet un avertissement si le test de la fonction n'a pas encore été mis en œuvre.
+    La fonction s'exécute quand même.
+
+    :param arg: The function (Python does that by default> if used as @to_test else it is the wanted message.
+    :return:
+    """
+    if callable(arg):  # used as @to_test
+        @functools.wraps(arg)
+        def wrapper(*args, **kwargs):
+            warnings.warn(f"{arg.__name__} - to_test: testing pending.", stacklevel=2)
+            return arg(*args, **kwargs)
+        return wrapper
+
+    def decorator(func):  # Used as @to_test("custom message")
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            message = arg or "testing pending"
+            warnings.warn(f"{func.__name__} - to_test: {message}.", stacklevel=2)
             return func(*args, **kwargs)
         return wrapper
 

@@ -1,6 +1,6 @@
 from pylix.errors.useful_errors import *
 from pylix.errors import assertion
-from pylix.errors.decorator import deprecated, TODO
+from pylix.errors.decorator import deprecated, TODO, to_test
 from pylix.errors.enums import *
 
 __all__ = [
@@ -14,5 +14,6 @@ __all__ = [
     "TODO",
     "TypesTuple",
     "assertion",
-    "deprecated"
+    "deprecated",
+    "to_test"
 ]

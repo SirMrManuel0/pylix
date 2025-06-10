@@ -39,3 +39,43 @@ not_done()
   not_done()
 I am doing something.
 ```
+
+## to_test
+***
+This decorator gives a warning if the testing for the function has not yet been implemented.
+The function still executes.
+
+Ce décorateur émet un avertissement si le test de la fonction n'a pas encore été mis en œuvre.
+La fonction s'exécute quand même.
+
+Example:
+```python
+from pylix.errors import to_test
+
+@to_test
+def no_tests():
+    print("I am not tested.")
+
+no_tests()
+```
+```title="output"
+<stdin>:7: UserWarning: no_tests - to_test: testing pending.
+  no_tests()
+I am not tested.
+```
+
+with a custom message:
+```python
+from pylix.errors import to_test
+
+@to_test("in test_decorator.py")
+def no_tests():
+    print("I am not tested.")
+
+no_tests()
+```
+```title="output"
+<stdin>:7: UserWarning: no_tests - to_test: in test_decorator.py.
+  no_tests()
+I am not tested.
+```
